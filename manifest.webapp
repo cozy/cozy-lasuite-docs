@@ -20,6 +20,11 @@
     }
   },
   "permissions": {
+    "files": {
+      "description": "Required to use Docs with Drive",
+      "type": "io.cozy.files",
+      "verbs": ["ALL"]
+    },
     "apps": {
       "description": "Required by the cozy-bar to display the icons of the apps",
       "type": "io.cozy.apps",
