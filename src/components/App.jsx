@@ -6,9 +6,9 @@ import flag from 'cozy-flags'
 const App = () => {
   const embeddedDocsUrl = flag('docs.embedded-app-url')
 
-  useExternalBridge(embeddedDocsUrl)
+  const { isReady, urlToLoad } = useExternalBridge(embeddedDocsUrl)
 
-  return <iframe id="embeddedApp" src={embeddedDocsUrl}></iframe>
+  return <iframe id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
 }
 
 export default App
