@@ -4016,10 +4016,10 @@ cozy-device-helper@^3.8.0:
   dependencies:
     lodash "^4.17.19"
 
-cozy-external-bridge@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/cozy-external-bridge/-/cozy-external-bridge-0.13.0.tgz#8e16685f782c3e4a3a8fede66db59fd4021d2141"
-  integrity sha512-/tput2hpB2Sb12TRPq3/WGpncJ8grHPNWIwdhm6/rRbhfdHJyQXZLs/eNzp5sJi13EfKl9WqbzQQFLmEhP7Skw==
+cozy-external-bridge@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/cozy-external-bridge/-/cozy-external-bridge-0.14.0.tgz#6d4cba8cf644942c66d9c3558b1745e2b393db82"
+  integrity sha512-RpeVlMGQ8hFRFRs30rvUtnPJKbihFgPzGO80F2TTfeOSE/qwzeqZb3zsejCwh9QMmJsHBIqyeGdiqKzVmsxo0A==
   dependencies:
     comlink "4.4.1"
 

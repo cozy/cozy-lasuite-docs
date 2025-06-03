@@ -59,7 +59,7 @@
     "cozy-client": "^58.3.0",
     "cozy-dataproxy-lib": "^4.5.0",
     "cozy-device-helper": "^3.8.0",
-    "cozy-external-bridge": "^0.13.0",
+    "cozy-external-bridge": "^0.14.0",
     "cozy-flags": "^4.7.0",
     "cozy-intent": "^2.30.0",
     "cozy-logger": "^1.17.0",
