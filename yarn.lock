@@ -3958,10 +3958,10 @@ cozy-app-publish@^0.41.0:
     tar "^6.1.11"
     verror "^1.10.1"
 
-cozy-bar@^22.1.1:
-  version "22.1.1"
-  resolved "https://registry.yarnpkg.com/cozy-bar/-/cozy-bar-22.1.1.tgz#f471061e48d2a084b76d8293e72b9b6b23c9b314"
-  integrity sha512-oz+9RDEuamYDBYoFn8s6TigR1dRKuavqNNLRSvEF/XUY0VPliaiMFwiIP1vGBp+WFsIiofdVdl5TATOQKvlTIw==
+cozy-bar@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/cozy-bar/-/cozy-bar-22.1.3.tgz#81eb1822f5326503e69f4e416f211c11ac7f6263"
+  integrity sha512-oBoKnMbt36bEReloDTag+c1tMv7uIodBJyfkr9ABIKXIG44oZPSfFLBGNxvc0fYxP/2b5qza6Bk1JzDqXTz5zg==
   dependencies:
     hammerjs "2.0.8"
     lodash.debounce "4.0.8"
@@ -3974,10 +3974,10 @@ cozy-bar@^22.1.1:
     redux-persist "5.10.0"
     redux-thunk "2.3.0"
 
-cozy-client@^58.0.1:
-  version "58.0.1"
-  resolved "https://registry.yarnpkg.com/cozy-client/-/cozy-client-58.0.1.tgz#5f7d6244abb93c0393749b500c004a30f986a265"
-  integrity sha512-cc+/aeKnYo04ylZjB+O2GmYj0j7Sh4j5d5r6aAay/XPH9QpzWkaxQn9EwLLNZas3Gki3Js0o9O9rosKpSu1JNA==
+cozy-client@^58.3.0:
+  version "58.3.0"
+  resolved "https://registry.yarnpkg.com/cozy-client/-/cozy-client-58.3.0.tgz#abccb6ab49712a2fe9c86b1f452ab65613fe9ad3"
+  integrity sha512-YwI3urghhmr/lrfTPvNYhK7+FGjz16uJmwxla1CaxhAMRWG+bQpFU17qpaex2yo3Ri+37IxYeD7OfZ6B+eXqMQ==
   dependencies:
     "@cozy/minilog" "1.0.0"
     "@fastify/deepmerge" "^2.0.2"
@@ -4001,10 +4001,10 @@ cozy-client@^58.0.1:
     sift "^6.0.0"
     url-search-params-polyfill "^8.0.0"
 
-cozy-dataproxy-lib@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/cozy-dataproxy-lib/-/cozy-dataproxy-lib-4.1.1.tgz#dd3fbca347ca9b441d744ae24ff03562f0c339d7"
-  integrity sha512-zmX62btsZDQLPUeLMn+oMJZC+4QfqphGcrvFgK1YKhnvf+wLU9OZcw3BVuS2nqVAraKTOcZtk7Vyp7IJRFL5fg==
+cozy-dataproxy-lib@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/cozy-dataproxy-lib/-/cozy-dataproxy-lib-4.5.0.tgz#fc3616f9185727f2c9ee425fa2c10dd6889ae0d2"
+  integrity sha512-zk70SeTLh798QfOkWEajOGmKGgo5V1Zbvdf9FA0T8mw17qjyxU2qYTRYTZbd4ZTCfKvp8dw1+RkzPzcUvkoBiQ==
   dependencies:
     comlink "4.4.1"
     flexsearch "0.7.43"
@@ -4016,10 +4016,10 @@ cozy-device-helper@^3.8.0:
   dependencies:
     lodash "^4.17.19"
 
-cozy-external-bridge@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/cozy-external-bridge/-/cozy-external-bridge-0.12.0.tgz#4aef6a88829a2ceb32573a0a7270443aa2a53782"
-  integrity sha512-RY6wfMMMer9Ix9/Ftf8maR5yjtKgczDNMWoUl5+FavN+ImyzDqPuAMn197hrQ/Y6Zsf38Bmt5ZmwcHZuHAt8Bw==
+cozy-external-bridge@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/cozy-external-bridge/-/cozy-external-bridge-0.13.0.tgz#8e16685f782c3e4a3a8fede66db59fd4021d2141"
+  integrity sha512-/tput2hpB2Sb12TRPq3/WGpncJ8grHPNWIwdhm6/rRbhfdHJyQXZLs/eNzp5sJi13EfKl9WqbzQQFLmEhP7Skw==
   dependencies:
     comlink "4.4.1"
 
@@ -4058,12 +4058,12 @@ cozy-minilog@^3.10.0:
   dependencies:
     microee "0.0.6"
 
-cozy-pouch-link@^58.0.1:
-  version "58.0.1"
-  resolved "https://registry.yarnpkg.com/cozy-pouch-link/-/cozy-pouch-link-58.0.1.tgz#0f36c6f16a0135ac39b9e7b921f87338ad88163b"
-  integrity sha512-VsSsonLqYF7ZtGsie1JMa9++RcwaQH7Rwpj2Hv8jENOsQOhtIb0AX0yGkBaFXwxu9gH5cQ0pQuJ9AYDjUjnMRA==
+cozy-pouch-link@^58.3.0:
+  version "58.3.0"
+  resolved "https://registry.yarnpkg.com/cozy-pouch-link/-/cozy-pouch-link-58.3.0.tgz#5f965a3412bcb74dd246ff15c19b8f0d9a35348b"
+  integrity sha512-iwTRNzSNcYkfLGdYtukrDqqzfDRBThNyNzVK22vy7+8aY7OstiUVgZUNbGSg+rEa8qZmEFaCpEpVnvo64qgrKA==
   dependencies:
-    cozy-client "^58.0.1"
+    cozy-client "^58.3.0"
     pouchdb-browser "^7.2.2"
     pouchdb-find "^7.2.2"
 
@@ -4074,10 +4074,10 @@ cozy-realtime@^5.6.4:
   dependencies:
     "@cozy/minilog" "^1.0.0"
 
-cozy-search@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/cozy-search/-/cozy-search-0.6.0.tgz#b3debc8d626f4d7f33842306f57cbd53275aaa7f"
-  integrity sha512-8co1c3TSkWMqTSBPrcvsz/S4RKcYsmeK4JvT0oixvgoXpQwUh9bkIM8qlo9fRkp0kYycLyI5yB32rvChMw+RwA==
+cozy-search@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/cozy-search/-/cozy-search-0.7.0.tgz#ec5ac4fa5d79315d189dc7f45c4a1ec91c118385"
+  integrity sha512-fzFChjltSIoJu1X+B6PeSU510vxNWPlLXizO8qqJpetO74vp10Nzo4Iaqr7B9d8LOZoyhF1OtAlyvNYOZqoL6Q==
   dependencies:
     classnames "2.5.1"
     lodash "4.17.21"
