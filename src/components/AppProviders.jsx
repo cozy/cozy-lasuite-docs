@@ -7,6 +7,7 @@ import { DataProxyProvider } from 'cozy-dataproxy-lib'
 import { WebviewIntentProvider } from 'cozy-intent'
 import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import SharingProvider from 'cozy-sharing'
+import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 import AlertProvider from 'cozy-ui/transpiled/react/providers/Alert'
 import { I18n } from 'cozy-ui/transpiled/react/providers/I18n'
 
@@ -14,18 +15,20 @@ const AppProviders = ({ client, lang, polyglot, children }) => {
   return (
     <WebviewIntentProvider>
       <CozyProvider client={client}>
-        <RealTimeQueries doctype="io.cozy.files" />
-        <DataProxyProvider>
-          <AlertProvider>
-            <SharingProvider doctype="io.cozy.files" documentType="Files">
-              <BarProvider>
-                <I18n lang={lang} polyglot={polyglot}>
-                  <BreakpointsProvider>{children}</BreakpointsProvider>
-                </I18n>
-              </BarProvider>
-            </SharingProvider>
-          </AlertProvider>
-        </DataProxyProvider>
+        <CozyTheme>
+          <RealTimeQueries doctype="io.cozy.files" />
+          <DataProxyProvider>
+            <AlertProvider>
+              <SharingProvider doctype="io.cozy.files" documentType="Files">
+                <BarProvider>
+                  <I18n lang={lang} polyglot={polyglot}>
+                    <BreakpointsProvider>{children}</BreakpointsProvider>
+                  </I18n>
+                </BarProvider>
+              </SharingProvider>
+            </AlertProvider>
+          </DataProxyProvider>
+        </CozyTheme>
       </CozyProvider>
     </WebviewIntentProvider>
   )
