@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { useExternalBridge } from 'cozy-external-bridge/container'
 import flag from 'cozy-flags'
@@ -9,9 +9,15 @@ import { useLocation } from 'react-router-dom'
 import { Q, useClient, useQuery } from 'cozy-client'
 import { BarRight } from 'cozy-bar'
 
+import SharingProvider, { ShareModal } from 'cozy-sharing'
+
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+
+import Dialog, { DialogTitle, DialogActions } from 'cozy-ui/transpiled/react/Dialog'
+import Divider from 'cozy-ui/transpiled/react/Divider'
+import Typography from 'cozy-ui/transpiled/react/Typography'
 
 const App = () => {
   const { pathname } = useLocation()
@@ -33,40 +39,42 @@ const App = () => {
   console.log("currentlyOpenedFile", currentlyOpenedFile)
 
   const embeddedDocsUrl = flag('docs.embedded-app-url')
-
   const { isReady, urlToLoad } = useExternalBridge(embeddedDocsUrl)
-  const [controllerAppUrl, setControllerAppUrl] = useState("http://drive.claude2.192-168-1-28.nip.io:8080/")
-  const [controllerAppParams, setControllerAppParams] = useState(["runsInShell=true"])
+
+  const isHTTPS = window.location.protocol === 'https:'
+  const driveURL = `http${isHTTPS ? 's' : ''}://drive.${client.instanceOptions.domain}`;
+
+  const [controllerAppUrl, setControllerAppUrl] = useState(driveURL)
+
+  const [controllerHasLoaded, setControllerHasLoaded] = useState(false)
 
   const controllerApp = React.useRef(null)
   const embeddedApp = React.useRef(null)
 
-  const addOrReplaceParam = (key, value) => {
-    const index = controllerAppParams.findIndex(param => param.startsWith(key + "="))
-    if (index !== -1) {
-      const newParams = [...controllerAppParams]
-      newParams[index] = `${key}=${value}`
-      setControllerAppParams(newParams)
-    } else {
-      setControllerAppParams([...controllerAppParams, `${key}=${value}`])
-    }
-  }
-
-  const removeItemFromParams = (key) => {
-    const newParams = controllerAppParams.filter(param => !param.startsWith(key + "="))
-    setControllerAppParams(newParams)
-  }
-
-  useEffect(() => {
+  const updateOpenedFileInController = useCallback(() => {
     if (!currentlyOpenedFile) return
     const directory = currentlyOpenedFile.dir_id
-    setControllerAppUrl(`http://drive.claude2.192-168-1-28.nip.io:8080/#/folder/${directory}`)
-    addOrReplaceParam("selectedFile", currentlyOpenedFile.id)
+    controllerApp.current.contentWindow.postMessage('openFolder:' + directory, '*');
+    controllerApp.current.contentWindow.postMessage('selectedFile:' + currentlyOpenedFile.id, '*');
   }, [currentlyOpenedFile])
+
+  useEffect(() => {
+    updateOpenedFileInController();
+  }, [currentlyOpenedFile, controllerHasLoaded])
+
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   useEffect(() => {
     window.onmessage = function (e) {
       if (e.data == undefined || e.data == null || typeof e.data !== "string") return;
+      if( e.data === "loaded") {
+        console.log("embedded app loaded")
+        if (!controllerHasLoaded) {
+          setControllerHasLoaded(true);
+        }
+        controllerApp.current.contentWindow.postMessage('inShell:true', '*');
+        updateOpenedFileInController();
+      }
       if (e.data.startsWith("openFile:")) {
         const fileId = e.data.split("openFile:")[1].trim();
         console.log("should open ", fileId)
@@ -75,6 +83,10 @@ const App = () => {
         console.log("newURL", newURL)
         // embeddedApp.current.src = newURL;
         embeddedApp.current.contentWindow.postMessage('openFile:' + fileId, '*');
+      }
+      if (e.data === ("shareFile")) {
+        console.log("should share current file")
+        setShareModalOpen(true);
       }
     };
   }, [])
@@ -97,9 +109,16 @@ const App = () => {
         />
       </BarRight>
 
-      <iframe ref={controllerApp} className={styles["controllerApp"]} id="controllerApp" src={
-        controllerAppUrl + (controllerAppParams.length > 0 ? "?" + controllerAppParams.join("&") : "")
-      }></iframe>
+      {shareModalOpen && currentlyOpenedFile && (
+        <ShareModal
+          document={currentlyOpenedFile}
+          documentType="Files"
+          sharingDesc={currentlyOpenedFile.name}
+          onClose={() => setShareModalOpen(false)}
+        />
+      )}
+
+      <iframe ref={controllerApp} className={styles["controllerApp"]} id="controllerApp" src={controllerAppUrl}></iframe>
       <iframe ref={embeddedApp} className={styles["embeddedApp"]} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
     </div>
   )

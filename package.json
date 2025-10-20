@@ -66,6 +66,7 @@
     "cozy-pouch-link": "^58.3.0",
     "cozy-realtime": "^5.6.4",
     "cozy-search": "^0.7.0",
+    "cozy-sharing": "^26.6.1",
     "cozy-ui": "^123.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
