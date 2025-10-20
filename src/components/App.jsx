@@ -7,7 +7,7 @@ import styles from '../styles/iframes.styl'
 
 import { useLocation } from 'react-router-dom'
 import { Q, useClient, useQuery } from 'cozy-client'
-import { BarLeft, BarRight } from 'cozy-bar'
+import { BarLeft, BarCenter, BarRight } from 'cozy-bar'
 
 import { ShareModal } from 'cozy-sharing'
 
@@ -16,6 +16,7 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import BurgerIcon from 'cozy-ui/transpiled/react/Icons/Burger'
 import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
+import Typography from 'cozy-ui/transpiled/react/Typography'
 
 const App = () => {
   const { pathname } = useLocation()
@@ -110,6 +111,10 @@ const App = () => {
     embeddedApp.current.contentWindow.postMessage('newDoc', '*');
   }
 
+  // Sanitize path for display
+  const path = currentlyOpenedFile ? currentlyOpenedFile.path.replace(currentlyOpenedFile.name, '') : '';
+  const sanitizedPath = path.endsWith('/') ? path.slice(0, -1) : path;
+
   return (
     <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--"+(isMobile ? "mobile" : "desktop")]}`}>
       <BarLeft>
@@ -122,6 +127,28 @@ const App = () => {
           style={{padding: 0, width: 42, height: 42, margin: "0 4px", marginLeft: !isMobile ? -8 : 0}}
         />
       </BarLeft>
+
+      {currentlyOpenedFile && (
+        <BarCenter>
+          {currentlyOpenedFile.path ? (
+            <a
+              style={{ color: 'inherit', textDecoration: 'none', marginLeft: 4 }}
+              onClick={(e) => {
+                e.preventDefault();
+                // Ask CONTROLLER app to open the parent folder
+                controllerApp.current.contentWindow.postMessage('openFolder:' + currentlyOpenedFile.dir_id, '*');
+              }}
+              href="#"
+              className="u-flex u-flex-column"
+            >
+              <Typography variant="subtitle2">{currentlyOpenedFile.name}</Typography>
+              <Typography variant="caption">{sanitizedPath}</Typography>
+            </a>
+          ) : (
+            <></>
+          )}
+        </BarCenter>
+      )}
       
       {!isMobile &&
         <BarRight>
