@@ -20,9 +20,15 @@ import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
 const App = () => {
   const { pathname } = useLocation()
   const client = useClient()
-
   const { isMobile } = useBreakpoints()
 
+  // State to manage share modal visibility
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+
+  // State to manage drive panel visibility (desktop / mobile)
+  const [driveOpen, setDriveOpen] = useState(false);
+
+  // Getting the currently opened file based on the URL
   const externalId = pathname.includes('/bridge/docs/')
     ? pathname.replace('/bridge/docs/', '').replace('/', '')
     : null
@@ -35,22 +41,24 @@ const App = () => {
     { as: `io.cozy.files/${externalId}` }
   )
 
+  // State containing the currently opened file
   const currentlyOpenedFile = files && files.length > 0 ? files[0] : null
-  console.log("currentlyOpenedFile", currentlyOpenedFile)
 
+  // Get IFrame URL from external flag
   const embeddedDocsUrl = flag('docs.embedded-app-url')
   const { isReady, urlToLoad } = useExternalBridge(embeddedDocsUrl)
 
+  // Getting drive controller URL
   const isHTTPS = window.location.protocol === 'https:'
   const driveURL = `http${isHTTPS ? 's' : ''}://drive.${client.instanceOptions.domain}`;
-
   const [controllerAppUrl, setControllerAppUrl] = useState(driveURL)
-
   const [controllerHasLoaded, setControllerHasLoaded] = useState(false)
 
+  // Réfs to interact with iframes
   const controllerApp = React.useRef(null)
   const embeddedApp = React.useRef(null)
 
+  // Synchronize opened file with controller app (opens in the right folder)
   const updateOpenedFileInController = useCallback(() => {
     if (!currentlyOpenedFile) return
     const directory = currentlyOpenedFile.dir_id
@@ -58,60 +66,62 @@ const App = () => {
     controllerApp.current.contentWindow.postMessage('selectedFile:' + currentlyOpenedFile.id, '*');
   }, [currentlyOpenedFile])
 
+  // Call synchronization when loaded and on file change (if link opened from Iframe)
   useEffect(() => {
     updateOpenedFileInController();
   }, [currentlyOpenedFile, controllerHasLoaded])
 
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-
+  // Intercept messages from both iframes
   useEffect(() => {
     window.onmessage = function (e) {
       if (e.data == undefined || e.data == null || typeof e.data !== "string") return;
+      // CONTROLLER : Has loaded
       if( e.data === "loaded") {
-        console.log("embedded app loaded")
+        // Save loaded state
         if (!controllerHasLoaded) {
           setControllerHasLoaded(true);
         }
+        // Inform controller that we are in shell (to enable shell specific features)
         controllerApp.current.contentWindow.postMessage('inShell:true', '*');
+        // Sync opened file in controller
         updateOpenedFileInController();
       }
+
+      // CONTROLLER : Open file request
       if (e.data.startsWith("openFile:")) {
+        // Get fileId
         const fileId = e.data.split("openFile:")[1].trim();
-        console.log("should open ", fileId)
-        // redirect to same url but replace everything after docs/* by docs/{fileId}
-        const newURL = embeddedDocsUrl + "/docs/" + fileId;
-        console.log("newURL", newURL)
-        // embeddedApp.current.src = newURL;
+        // Ask EMBEDDED app to open the file in its router
         embeddedApp.current.contentWindow.postMessage('openFile:' + fileId, '*');
       }
+
+      // EMBEDDED : Share file request
       if (e.data === ("shareFile")) {
-        console.log("should share current file")
+        // Open share modal (knows file from currentlyOpenedFile state)
         setShareModalOpen(true);
       }
     };
   }, [])
 
+  // Function to create a new document from the CONTROLLER app
   const createNewDocument = () => {
     if (!embeddedApp.current) return;
+    // Ask EMBEDDED app to create a new document
     embeddedApp.current.contentWindow.postMessage('newDoc', '*');
   }
 
-  const [driveOpen, setDriveOpen] = useState(false);
-
   return (
     <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--"+(isMobile ? "mobile" : "desktop")]}`}>
-      {isMobile && (
-        <BarLeft>
-          <Button
-            label={<Icon icon={BurgerIcon} size={20} />}
-            variant={"text"}
-            color="inherit"
-            size="large"
-            onClick={() => setDriveOpen(!driveOpen)}
-            style={{padding: 0, width: 42, height: 42, margin: "0 4px"}}
-          />
-        </BarLeft>
-      )}
+      <BarLeft>
+        <Button
+          label={<Icon icon={BurgerIcon} size={20} />}
+          variant={"text"}
+          color="inherit"
+          size="large"
+          onClick={() => setDriveOpen(!driveOpen)}
+          style={{padding: 0, width: 42, height: 42, margin: "0 4px", marginLeft: !isMobile ? -8 : 0}}
+        />
+      </BarLeft>
       
       {!isMobile &&
         <BarRight>
