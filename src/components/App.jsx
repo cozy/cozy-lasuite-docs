@@ -7,21 +7,21 @@ import styles from '../styles/iframes.styl'
 
 import { useLocation } from 'react-router-dom'
 import { Q, useClient, useQuery } from 'cozy-client'
-import { BarRight } from 'cozy-bar'
+import { BarLeft, BarRight } from 'cozy-bar'
 
-import SharingProvider, { ShareModal } from 'cozy-sharing'
+import { ShareModal } from 'cozy-sharing'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
-
-import Dialog, { DialogTitle, DialogActions } from 'cozy-ui/transpiled/react/Dialog'
-import Divider from 'cozy-ui/transpiled/react/Divider'
-import Typography from 'cozy-ui/transpiled/react/Typography'
+import BurgerIcon from 'cozy-ui/transpiled/react/Icons/Burger'
+import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
 
 const App = () => {
   const { pathname } = useLocation()
   const client = useClient()
+
+  const { isMobile } = useBreakpoints()
 
   const externalId = pathname.includes('/bridge/docs/')
     ? pathname.replace('/bridge/docs/', '').replace('/', '')
@@ -96,18 +96,35 @@ const App = () => {
     embeddedApp.current.contentWindow.postMessage('newDoc', '*');
   }
 
+  const [driveOpen, setDriveOpen] = useState(false);
+
   return (
-    <div className={styles["iframesContainer"]}>
-      <BarRight>
-        <Button
-          label={"Nouveau document"}
-          variant={"primary"}
-          size="small"
-          startIcon={<Icon icon={PlusIcon} />}
-          onClick={() => createNewDocument()}
-          className={"u-mr-1"}
-        />
-      </BarRight>
+    <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--"+(isMobile ? "mobile" : "desktop")]}`}>
+      {isMobile && (
+        <BarLeft>
+          <Button
+            label={<Icon icon={BurgerIcon} size={20} />}
+            variant={"text"}
+            color="inherit"
+            size="large"
+            onClick={() => setDriveOpen(!driveOpen)}
+            style={{padding: 0, width: 42, height: 42, margin: "0 4px"}}
+          />
+        </BarLeft>
+      )}
+      
+      {!isMobile &&
+        <BarRight>
+          <Button
+            label={"Nouveau document"}
+            variant={"primary"}
+            size="small"
+            startIcon={<Icon icon={PlusIcon} />}
+            onClick={() => createNewDocument()}
+            className={"u-mr-1"}
+          />
+        </BarRight>
+      }
 
       {shareModalOpen && currentlyOpenedFile && (
         <ShareModal
@@ -118,8 +135,8 @@ const App = () => {
         />
       )}
 
-      <iframe ref={controllerApp} className={styles["controllerApp"]} id="controllerApp" src={controllerAppUrl}></iframe>
-      <iframe ref={embeddedApp} className={styles["embeddedApp"]} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
+      <iframe ref={controllerApp} className={`${styles["controllerApp"]} ${styles["controllerApp--" + (isMobile ? "mobile" : "desktop")]} ${driveOpen ? styles["open"] : ""}`} id="controllerApp" src={controllerAppUrl}></iframe>
+      <iframe ref={embeddedApp} className={`${styles["embeddedApp"]} ${styles["embeddedApp--"+(isMobile ? "mobile" : "desktop")]}`} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
     </div>
   )
 }
