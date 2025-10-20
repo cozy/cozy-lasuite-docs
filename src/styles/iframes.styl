@@ -32,10 +32,15 @@
 
     transition: left 0.3s ease, background 0.3s ease, padding-right 0.3s ease
 
-  .controllerApp--desktop
-    max-width: 50vw
-
   .controllerApp--mobile.open
     pointer-events: auto
     background: #00000055
     left: 0
+
+  .controllerApp--desktop
+    margin-left: -400px
+
+    transition: margin-left 0.3s ease
+
+  .controllerApp--desktop.open
+    margin-left: 0
