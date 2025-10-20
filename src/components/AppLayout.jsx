@@ -56,10 +56,12 @@ const AppLayout = () => {
       <BarCenter>
         {path ? (
           <div className="u-flex u-flex-column">
-            <Typography variant="h6">{title}</Typography>
-            <a href={link} target="_blank" rel="noreferrer">
-              <Typography variant="caption">{path}</Typography>
-            </a>
+            <Typography variant="subtitle2">{title}</Typography>
+            {path !== "/" && path.trim().length > 0 &&
+              <a href={link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'inherit', marginTop: -2 }}>
+                <Typography variant="caption">{path}</Typography>
+              </a>
+            }
           </div>
         ) : (
           <BarTitle>{title}</BarTitle>
