@@ -17,6 +17,7 @@ import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import BurgerIcon from 'cozy-ui/transpiled/react/Icons/Burger'
 import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import Typography from 'cozy-ui/transpiled/react/Typography'
+import BarTitle from 'cozy-ui/transpiled/react/BarTitle'
 
 const App = () => {
   const { pathname } = useLocation()
@@ -128,7 +129,7 @@ const App = () => {
         />
       </BarLeft>
 
-      {currentlyOpenedFile && (
+      {currentlyOpenedFile ? (
         <BarCenter>
           {currentlyOpenedFile.path ? (
             <a
@@ -147,6 +148,12 @@ const App = () => {
           ) : (
             <></>
           )}
+        </BarCenter>
+      ) : (
+        <BarCenter>
+          <BarTitle>
+            Docs
+          </BarTitle>
         </BarCenter>
       )}
       
