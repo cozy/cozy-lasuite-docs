@@ -18,6 +18,7 @@ import BurgerIcon from 'cozy-ui/transpiled/react/Icons/Burger'
 import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 import BarTitle from 'cozy-ui/transpiled/react/BarTitle'
+import { CircularProgress } from 'cozy-ui/transpiled/react/Progress';
 
 const App = () => {
   const { pathname } = useLocation()
@@ -55,6 +56,7 @@ const App = () => {
   const driveURL = `http${isHTTPS ? 's' : ''}://drive.${client.instanceOptions.domain}`;
   const [controllerAppUrl, setControllerAppUrl] = useState(driveURL)
   const [controllerHasLoaded, setControllerHasLoaded] = useState(false)
+  const [embeddedAppHasLoaded, setEmbeddedAppHasLoaded] = useState(false)
 
   // Réfs to interact with iframes
   const controllerApp = React.useRef(null)
@@ -63,6 +65,7 @@ const App = () => {
   // Synchronize opened file with controller app (opens in the right folder)
   const updateOpenedFileInController = useCallback(() => {
     if (!currentlyOpenedFile) return
+    if (!controllerApp.current) return
     const directory = currentlyOpenedFile.dir_id
     controllerApp.current.contentWindow.postMessage('openFolder:' + directory, '*');
     controllerApp.current.contentWindow.postMessage('selectedFile:' + currentlyOpenedFile.id, '*');
@@ -84,9 +87,15 @@ const App = () => {
           setControllerHasLoaded(true);
         }
         // Inform controller that we are in shell (to enable shell specific features)
+        if (!controllerApp.current) return;
         controllerApp.current.contentWindow.postMessage('inShell:true', '*');
         // Sync opened file in controller
         updateOpenedFileInController();
+      }
+
+      // EMBEDDED : Has loaded
+      if (e.data === "embedded") {
+        setEmbeddedAppHasLoaded(true);
       }
 
       // CONTROLLER : Open file request
@@ -120,12 +129,19 @@ const App = () => {
     <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--"+(isMobile ? "mobile" : "desktop")]}`}>
       <BarLeft>
         <Button
-          label={<Icon icon={BurgerIcon} size={20} />}
+          label={
+            !controllerHasLoaded ? (
+              <CircularProgress size={20} />
+            ) : (
+              <Icon icon={BurgerIcon} size={20} />
+            )
+          }
           variant={"text"}
           color="inherit"
           size="large"
           onClick={() => setDriveOpen(!driveOpen)}
           style={{padding: 0, width: 42, height: 42, margin: "0 4px", marginLeft: !isMobile ? -8 : 0}}
+          disabled={!controllerHasLoaded}
         />
       </BarLeft>
 
@@ -137,6 +153,7 @@ const App = () => {
               onClick={(e) => {
                 e.preventDefault();
                 // Ask CONTROLLER app to open the parent folder
+                if (!controllerApp.current) return;
                 controllerApp.current.contentWindow.postMessage('openFolder:' + currentlyOpenedFile.dir_id, '*');
               }}
               href="#"
@@ -179,7 +196,10 @@ const App = () => {
         />
       )}
 
-      <iframe ref={controllerApp} className={`${styles["controllerApp"]} ${styles["controllerApp--" + (isMobile ? "mobile" : "desktop")]} ${driveOpen ? styles["open"] : ""}`} id="controllerApp" src={controllerAppUrl}></iframe>
+      {embeddedAppHasLoaded && (
+        <iframe ref={controllerApp} className={`${styles["controllerApp"]} ${styles["controllerApp--" + (isMobile ? "mobile" : "desktop")]} ${driveOpen ? styles["open"] : ""}`} id="controllerApp" src={controllerAppUrl}></iframe>
+      )}
+
       <iframe ref={embeddedApp} className={`${styles["embeddedApp"]} ${styles["embeddedApp--"+(isMobile ? "mobile" : "desktop")]}`} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
     </div>
   )

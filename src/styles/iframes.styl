@@ -9,8 +9,6 @@
   iframe
     border none
     height 100%
-    & + iframe
-      border-left 1px solid #ccc
 
   .controllerApp
     width 400px
@@ -30,7 +28,8 @@
     background: #00000000
     pointer-events: none
 
-    transition: left 0.3s ease, background 0.3s ease, padding-right 0.3s ease
+    transition: left 0.3s, background 0.3s, padding-right 0.3s
+    transition-timing-function: ease-in-out
 
   .controllerApp--mobile.open
     pointer-events: auto
@@ -39,8 +38,11 @@
 
   .controllerApp--desktop
     margin-left: -400px
+    border-right: 1px solid transparent
 
-    transition: margin-left 0.3s ease
+    transition: margin-left 0.4s, border-color 0.15s
+    transition-timing-function: ease-in-out
 
   .controllerApp--desktop.open
     margin-left: 0
+    border-color: var(--dividerColor)
