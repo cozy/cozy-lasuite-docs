@@ -1,10 +1,7 @@
 import React from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
-import { BarComponent, BarCenter } from 'cozy-bar'
-import { Q, useQuery, generateWebLink, useClient } from 'cozy-client'
-import BarTitle from 'cozy-ui/transpiled/react/BarTitle'
-import Typography from 'cozy-ui/transpiled/react/Typography'
+import { BarComponent } from 'cozy-bar'
 
 const AppLayout = () => {
   return (

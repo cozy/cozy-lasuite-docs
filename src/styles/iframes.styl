@@ -1,48 +1,48 @@
 .iframesContainer
-  display: flex
-  flex-direction: row
-  width 100%
-  height 100%
-  overflow hidden
-  position relative
-
-  iframe
-    border none
-    height 100%
-
-  .controllerApp
-    width 400px
-
-  .embeddedApp
-    flex 1
+    display flex
+    flex-direction row
     width 100%
+    height 100%
+    overflow hidden
+    position relative
 
-  .controllerApp--mobile
-    position: absolute
-    top: 0
-    left: -100%
-    width: calc(100% - 50px)
-    height: calc(100vh - 48px)
-    z-index: 10
-    padding-right: calc(100% + 50px)
-    background: #00000000
-    pointer-events: none
+    iframe
+        border 0
+        height 100%
 
-    transition: left 0.3s, background 0.3s, padding-right 0.3s
-    transition-timing-function: ease-in-out
+    .controllerApp
+        width 400px
 
-  .controllerApp--mobile.open
-    pointer-events: auto
-    background: #00000055
-    left: 0
+    .embeddedApp
+        flex 1
+        width 100%
 
-  .controllerApp--desktop
-    margin-left: -400px
-    border-right: 1px solid transparent
+    .controllerApp--mobile
+        position absolute
+        top 0
+        left -100%
+        width calc(100% - 50px)
+        height calc(100vh - 48px)
+        z-index 10
+        padding-right calc(100% + 50px)
+        background transparent
+        pointer-events none
 
-    transition: margin-left 0.4s, border-color 0.15s
-    transition-timing-function: ease-in-out
+        transition left .3s, background .3s, padding-right .3s
+        transition-timing-function ease-in-out
 
-  .controllerApp--desktop.open
-    margin-left: 0
-    border-color: var(--dividerColor)
+    .controllerApp--mobile.open
+        pointer-events auto
+        background var(--lt-shadowActive)
+        left 0
+
+    .controllerApp--desktop
+        margin-left -400px
+        border-right 1px solid transparent
+
+        transition margin-left .4s, border-color .15s
+        transition-timing-function ease-in-out
+
+    .controllerApp--desktop.open
+        margin-left 0
+        border-color var(--dividerColor)

@@ -5,10 +5,10 @@ import { CozyProvider } from 'cozy-client'
 import { RealTimeQueries } from 'cozy-client'
 import { DataProxyProvider } from 'cozy-dataproxy-lib'
 import { WebviewIntentProvider } from 'cozy-intent'
-import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import SharingProvider from 'cozy-sharing'
-import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 import AlertProvider from 'cozy-ui/transpiled/react/providers/Alert'
+import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
+import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 import { I18n } from 'cozy-ui/transpiled/react/providers/I18n'
 
 const AppProviders = ({ client, lang, polyglot, children }) => {
