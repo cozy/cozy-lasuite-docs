@@ -23,7 +23,7 @@ const App = () => {
   const { isMobile } = useBreakpoints()
 
   // Config
-  const driveEnabled = flag('docs.drive.enabled')
+  const driveEnabled = true // Can be replaced by a flag if needed
 
   // State
   const [shareModalOpen, setShareModalOpen] = useState(false)
