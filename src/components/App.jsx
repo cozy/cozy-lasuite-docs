@@ -55,17 +55,17 @@ const App = () => {
   const embeddedDocsUrl = flag('docs.embedded-app-url')
   const { isReady, urlToLoad } = useExternalBridge(embeddedDocsUrl)
 
-  const isHTTPS = window.location.protocol === 'https:'
-  const driveURL = `http${isHTTPS ? 's' : ''}://drive.${client.instanceOptions.domain}`
-  const controllerAppUrl = driveURL
+  const controllerAppUrl = window.location.origin.replace('docs', 'drive')
 
   // Helpers
+  // Get path without filename and sanitize it
   const path = currentlyOpenedFile
     ? currentlyOpenedFile.path.replace(currentlyOpenedFile.name, '')
     : ''
   const sanitizedPath = path.endsWith('/') ? path.slice(0, -1) : path
 
   // Callbacks
+  // Ask controller to open folder and select file (changes shell state)
   const updateOpenedFileInController = useCallback(() => {
     if (!controllerHasLoaded) return
     if (!driveEnabled) return
@@ -82,12 +82,14 @@ const App = () => {
     )
   }, [currentlyOpenedFile, controllerHasLoaded, driveEnabled])
 
+  // Ask embedded app to create a new document
   const createNewDocument = () => {
     if (!embeddedApp.current) return
     embeddedApp.current.contentWindow.postMessage('newDoc', '*')
   }
 
   // Effects
+  // Update controller folder when opened file changes
   useEffect(() => {
     if (!controllerHasLoaded) return
     if (!driveEnabled) return
@@ -99,6 +101,7 @@ const App = () => {
     driveEnabled
   ])
 
+  // Message listener
   useEffect(() => {
     window.onmessage = function (e) {
       if (e.data == undefined || e.data == null || typeof e.data !== 'string')
