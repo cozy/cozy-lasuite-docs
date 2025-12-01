@@ -81,7 +81,7 @@ const App = () => {
     window.onmessage = function (e) {
       if (e.data == undefined || e.data == null || typeof e.data !== "string") return;
       // CONTROLLER : Has loaded
-      if( e.data === "loaded") {
+      if (e.data === "loaded") {
         // Save loaded state
         if (!controllerHasLoaded) {
           setControllerHasLoaded(true);
@@ -126,21 +126,21 @@ const App = () => {
   const sanitizedPath = path.endsWith('/') ? path.slice(0, -1) : path;
 
   return (
-    <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--"+(isMobile ? "mobile" : "desktop")]}`}>
+    <div className={`${styles["iframesContainer"]} ${styles["iframesContainer--" + (isMobile ? "mobile" : "desktop")]}`}>
       <BarLeft>
         <Button
           label={
             !controllerHasLoaded ? (
               <CircularProgress size={20} />
             ) : (
-              <Icon icon={BurgerIcon} size={20} />
+              <Icon icon={BurgerIcon} size={20} color="var(--primaryTextColor)" />
             )
           }
           variant={"text"}
           color="inherit"
           size="large"
           onClick={() => setDriveOpen(!driveOpen)}
-          style={{padding: 0, width: 42, height: 42, margin: "0 4px", marginLeft: !isMobile ? -8 : 0}}
+          style={{ padding: 0, width: 42, height: 42, margin: "0 8px", marginLeft: !isMobile ? -8 : 4 }}
           disabled={!controllerHasLoaded}
         />
       </BarLeft>
@@ -160,7 +160,10 @@ const App = () => {
               className="u-flex u-flex-column"
             >
               <Typography variant="subtitle2">{currentlyOpenedFile.name}</Typography>
-              <Typography variant="caption">{sanitizedPath}</Typography>
+              {sanitizedPath && sanitizedPath !== '/' ? (
+                <Typography variant="caption">{sanitizedPath}</Typography>
+              ) : (<></>
+              )}
             </a>
           ) : (
             <></>
@@ -173,7 +176,7 @@ const App = () => {
           </BarTitle>
         </BarCenter>
       )}
-      
+
       {!isMobile &&
         <BarRight>
           <Button
@@ -200,7 +203,7 @@ const App = () => {
         <iframe ref={controllerApp} className={`${styles["controllerApp"]} ${styles["controllerApp--" + (isMobile ? "mobile" : "desktop")]} ${driveOpen ? styles["open"] : ""}`} id="controllerApp" src={controllerAppUrl}></iframe>
       )}
 
-      <iframe ref={embeddedApp} className={`${styles["embeddedApp"]} ${styles["embeddedApp--"+(isMobile ? "mobile" : "desktop")]}`} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
+      <iframe ref={embeddedApp} className={`${styles["embeddedApp"]} ${styles["embeddedApp--" + (isMobile ? "mobile" : "desktop")]}`} id="embeddedApp" src={isReady ? urlToLoad : null}></iframe>
     </div>
   )
 }
