@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { BarLeft, BarCenter, BarRight } from 'cozy-bar'
-import { Q, useClient, useQuery } from 'cozy-client'
+import { Q, useQuery } from 'cozy-client'
 import { useExternalBridge } from 'cozy-external-bridge/container'
 import flag from 'cozy-flags'
 import { ShareModal } from 'cozy-sharing'
@@ -20,7 +20,6 @@ import styles from '../styles/iframes.styl'
 const App = () => {
   // Hooks
   const { pathname } = useLocation()
-  const client = useClient()
   const { isMobile } = useBreakpoints()
 
   // Config
