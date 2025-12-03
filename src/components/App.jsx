@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { BarLeft, BarCenter, BarRight } from 'cozy-bar'
@@ -14,6 +14,7 @@ import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import { CircularProgress } from 'cozy-ui/transpiled/react/Progress'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'
+import { useI18n } from 'cozy-ui/transpiled/react/providers/I18n'
 
 import styles from '../styles/iframes.styl'
 
@@ -21,6 +22,7 @@ const App = () => {
   // Hooks
   const { pathname } = useLocation()
   const { isMobile } = useBreakpoints()
+  const { t } = useI18n()
 
   // Config
   const driveEnabled = true // Can be replaced by a flag if needed
@@ -40,15 +42,24 @@ const App = () => {
     ? pathname.replace('/bridge/docs/', '').replace('/', '')
     : null
 
-  const { data: files } = useQuery(
+  const { data: files, fetchStatus: filesFetchStatus } = useQuery(
     Q('io.cozy.files')
       .where({ 'metadata.externalId': externalId })
       .indexFields(['metadata.externalId'])
       .limitBy(1),
     { as: `io.cozy.files/${externalId}` }
   )
+  const [currentlyOpenedFile, setCurrentlyOpenedFile] = useState(null)
 
-  const currentlyOpenedFile = files && files.length > 0 ? files[0] : null
+  useEffect(() => {
+    if (filesFetchStatus !== 'loaded') return
+
+    if (files && files.length > 0) {
+      setCurrentlyOpenedFile(files[0])
+    } else {
+      setCurrentlyOpenedFile(null)
+    }
+  }, [files, filesFetchStatus])
 
   // URLs
   const embeddedDocsUrl = flag('docs.embedded-app-url')
@@ -134,6 +145,13 @@ const App = () => {
     }
   }, [controllerHasLoaded, updateOpenedFileInController])
 
+  const drivePathToCurrentFolder = useMemo(() => {
+    if (!currentlyOpenedFile) return '#'
+    const baseUrl = controllerAppUrl + '#/files/'
+    const dirId = currentlyOpenedFile.dir_id
+    return baseUrl + dirId
+  }, [currentlyOpenedFile, controllerAppUrl])
+
   return (
     <div
       className={`${styles['iframesContainer']} ${styles['iframesContainer--' + (isMobile ? 'mobile' : 'desktop')]}`}
@@ -171,32 +189,42 @@ const App = () => {
       {currentlyOpenedFile ? (
         <BarCenter>
           {currentlyOpenedFile.path ? (
-            <a
+            <div
               style={{
-                color: 'inherit',
-                textDecoration: 'none',
                 marginLeft: 4
               }}
-              onClick={e => {
-                e.preventDefault()
-                if (!controllerApp.current) return
-                controllerApp.current.contentWindow.postMessage(
-                  'openFolder:' + currentlyOpenedFile.dir_id,
-                  '*'
-                )
-              }}
-              href="#"
               className="u-flex u-flex-column"
             >
-              <Typography variant="subtitle2">
-                {currentlyOpenedFile.name}
-              </Typography>
-              {sanitizedPath && sanitizedPath !== '/' ? (
-                <Typography variant="caption">{sanitizedPath}</Typography>
-              ) : (
-                <></>
-              )}
-            </a>
+              <a
+                href="#"
+                className={`${styles['link']}`}
+                onClick={e => {
+                  e.preventDefault()
+                  if (!controllerApp.current) return
+                  controllerApp.current.contentWindow.postMessage(
+                    'openFolder:' + currentlyOpenedFile.dir_id,
+                    '*'
+                  )
+                }}
+              >
+                <Typography variant="subtitle2">
+                  {currentlyOpenedFile.name}
+                </Typography>
+              </a>
+
+              <a
+                href={drivePathToCurrentFolder}
+                target="_blank"
+                className={`${styles['link']}`}
+                rel="noreferrer"
+              >
+                <Typography variant="caption">
+                  {sanitizedPath && sanitizedPath !== '/'
+                    ? sanitizedPath
+                    : t('folder.root')}
+                </Typography>
+              </a>
+            </div>
           ) : (
             <></>
           )}
